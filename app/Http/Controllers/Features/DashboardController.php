@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function index(FirebaseService $firebase, ?ReliefPackCalculator $reliefPackCalculator = null)
     {
         $reliefPackCalculator ??= new ReliefPackCalculator();
-        $inventory = collect($firebase->getInventory());
+        $inventory = collect($this->safeFirebaseData($firebase, 'getInventory'));
 
         $forecastDataset = collect(json_decode(
             file_get_contents(public_path('js/cleaned_dataset.json')),
@@ -68,13 +68,13 @@ class DashboardController extends Controller
         $forecastFfp = $predictNextYear('ffp');
         $forecastFamilyHeads = $predictNextYear('fam');
 
-        $tents = collect($firebase->getTents());
+        $tents = collect($this->safeFirebaseData($firebase, 'getTents'));
 
-        $reliefPacks = collect($firebase->getReliefPacks());
+        $reliefPacks = collect($this->safeFirebaseData($firebase, 'getReliefPacks'));
 
-        $recentScannedTents = collect($firebase->getScans());
+        $recentScannedTents = collect($this->safeFirebaseData($firebase, 'getScans'));
 
-        $occupiedTents = collect($firebase->getOccupiedTents());
+        $occupiedTents = collect($this->safeFirebaseData($firebase, 'getOccupiedTents'));
 
         $occupancyData = $occupiedTents
             ->map(function ($item) {
@@ -84,7 +84,7 @@ class DashboardController extends Controller
             ->countBy()
             ->all();
 
-        $scanEvents = collect($firebase->getScans() ?? [])
+        $scanEvents = collect($this->safeFirebaseData($firebase, 'getScans'))
             ->map(function ($event, $key) {
                 $action = strtolower((string) ($event['action'] ?? ''));
                 $timestamp = $event['scannedAt'] ?? $event['scanned_at'] ?? $event['created_at'] ?? now()->toIso8601String();
@@ -101,7 +101,7 @@ class DashboardController extends Controller
                 ];
             });
 
-        $reliefPackScans = collect($firebase->getReliefPackScans() ?? [])
+        $reliefPackScans = collect($this->safeFirebaseData($firebase, 'getReliefPackScans'))
             ->map(function ($event, $key) {
                 $timestamp = $event['scanned_at'] ?? $event['scannedAt'] ?? $event['created_at'] ?? now()->toIso8601String();
                 $packNumber = $event['pack_number'] ?? $event['packNumber'] ?? $key;
@@ -146,5 +146,15 @@ class DashboardController extends Controller
 
             'auditLogs' => $auditLogs,
         ]);
+    }
+
+    /** Safely read optional Firebase collections so tests and degraded service states do not crash the dashboard. */
+    private function safeFirebaseData(FirebaseService $firebase, string $method)
+    {
+        try {
+            return $firebase->$method();
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }

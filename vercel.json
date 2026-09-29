@@ -1,6 +1,7 @@
 {
     "version": 2,
-    "outputDirectory": "public",
+    "outputDirectory": ".",
+    "buildCommand": "composer install --no-interaction --prefer-dist --no-progress && npm install && npm run build",
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.8.0"
