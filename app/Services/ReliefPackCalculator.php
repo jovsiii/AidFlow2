@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 
 class ReliefPackCalculator
 {
+    private const STANDARD_PACK_THRESHOLD = 300;
+
     private const REQUIRED_ITEMS = [
         'Toothbrush' => 5,
         'Toothpaste' => 2,
@@ -34,6 +36,11 @@ class ReliefPackCalculator
         return self::REQUIRED_ITEMS;
     }
 
+    public function threshold(): int
+    {
+        return self::STANDARD_PACK_THRESHOLD;
+    }
+
     public function count($inventory): int
     {
         $inventory = collect($inventory);
@@ -50,6 +57,6 @@ class ReliefPackCalculator
             ))
             ->min() ?? 0;
 
-        return $standardPacks + $completePacks;
+        return min(self::STANDARD_PACK_THRESHOLD, $standardPacks + $completePacks);
     }
 }

@@ -133,6 +133,7 @@ class DashboardController extends Controller
             'totalStock' => $inventory->sum('stock'),
 
             'standardReliefPacks' => $reliefPackCalculator->count($inventory),
+            'standardReliefPackThreshold' => $reliefPackCalculator->threshold(),
 
             'occupiedTentsCount' => $occupiedTents->count(),
 

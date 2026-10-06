@@ -89,6 +89,19 @@
             <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-130">
                 <h2 class="text-lg text-[#be3d3d] mb-3">Recent Inventory Transactions</h2>
 
+                <div class="mb-4 rounded-lg bg-gray-50 px-3 py-2 border border-gray-300">
+                    <div class="flex justify-between items-center text-xs mb-1.5">
+                        <span class="font-medium text-gray-700">Standard relief packs</span>
+                        <span class="font-semibold text-[#8a1c1c]">
+                            {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
+                        </span>
+                    </div>
+                    <div class="h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
+                            style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
+                    </div>
+                </div>
+
                 <div class="border border-gray-400 rounded-[14px] overflow-hidden flex-1 mb-4 flex flex-col">
                     <div class="overflow-y-auto">
                         <table class="w-full text-xs text-left">

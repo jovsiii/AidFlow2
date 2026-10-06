@@ -32,6 +32,18 @@ it('counts one pack for one complete standard item group', function () {
     expect((new ReliefPackCalculator())->count(completeReliefPackItems()))->toBe(1);
 });
 
+it('caps the standard relief-pack count at 300', function () {
+    $items = collect(range(1, 301))->map(fn () => [
+        'type' => 'standard',
+    ])->all();
+
+    expect((new ReliefPackCalculator())->count($items))->toBe(300);
+});
+
+it('exposes the standard relief-pack threshold', function () {
+    expect((new ReliefPackCalculator())->threshold())->toBe(300);
+});
+
 it('does not count an incomplete item group as a pack', function () {
     $items = completeReliefPackItems();
     array_pop($items);
