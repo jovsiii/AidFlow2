@@ -84,32 +84,32 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm w-130">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-[#8a1c1c]">Standard relief packs</p>
-                    <p class="mt-1 text-sm text-gray-700">
-                        {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
-                    </p>
-                </div>
-
-                <div class="flex-1 sm:max-w-md">
-                    <div class="h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
-                            style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
-                    </div>
-                </div>
-
-                <p class="whitespace-nowrap text-sm font-semibold text-gray-700">
-                    Threshold: {{ number_format($standardReliefPackThreshold) }} packs
-                </p>
-            </div>
-        </div>
-
         <div class="flex flex-row gap-2 flex-wrap lg:flex-nowrap w-full min-h-[calc(90vh-120px)]">
             {{-- Inventory --}}
             <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-130">
                 <h2 class="text-lg text-[#be3d3d] mb-3">Recent Inventory Transactions</h2>
+
+                <div class="bg-gray-50 rounded-lg border border-gray-300 p-3 mb-4">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-[#8a1c1c]">Standard relief packs</p>
+                            <p class="mt-1 text-sm text-gray-700">
+                                {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
+                            </p>
+                        </div>
+
+                        <div class="flex-1 sm:max-w-md">
+                            <div class="h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
+                                    style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
+                            </div>
+                        </div>
+
+                        <p class="whitespace-nowrap text-sm font-semibold text-gray-700">
+                            Threshold: {{ number_format($standardReliefPackThreshold) }} packs
+                        </p>
+                    </div>
+                </div>
 
                 <div class="border border-gray-400 rounded-[14px] overflow-hidden flex-1 mb-4 flex flex-col">
                     <div class="overflow-y-auto">
