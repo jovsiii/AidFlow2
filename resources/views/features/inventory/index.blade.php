@@ -359,6 +359,7 @@
             function openBatchModal() {
                 batchModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
+                batchModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
             function closeBatchModal() {
