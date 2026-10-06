@@ -266,7 +266,7 @@
     </div>
 
     <div id="batchModal"
-        class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 max-h-[90vh] overflow-y-auto">
         <div class="w-full max-w-5xl rounded-2xl border-4 border-red-600 bg-white shadow-2xl overflow-hidden">
             <div class="px-6 py-5 text-white">
                 <div class="flex items-center justify-between gap-4">
@@ -359,7 +359,7 @@
             function openBatchModal() {
                 batchModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
-                batchModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                batchModal.scrollTop = 0;
             }
 
             function closeBatchModal() {
