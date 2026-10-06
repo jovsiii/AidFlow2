@@ -46,7 +46,7 @@ class AddInventoryController extends Controller
                 'nullable',
                 'date',
                 Rule::requiredIf(
-                    $request->category !== 'Equipment'
+                    ! in_array($request->category, ['Equipment', 'Hygiene'], true)
                     && ! $request->filled('expirationDate')
                 ),
             ],
@@ -54,7 +54,7 @@ class AddInventoryController extends Controller
                 'nullable',
                 'date',
                 Rule::requiredIf(
-                    $request->category !== 'Equipment'
+                    ! in_array($request->category, ['Equipment', 'Hygiene'], true)
                     && ! $request->filled('expiration_date')
                 ),
             ],

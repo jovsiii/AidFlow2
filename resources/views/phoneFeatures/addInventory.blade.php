@@ -210,10 +210,11 @@
         }
 
         function updateExpirationDateFields() {
-            const isEquipment = categorySelect.value === 'Equipment';
-            expirationDateGroup.classList.toggle('hidden', isEquipment);
-            expirationDateInput.disabled = isEquipment;
-            expirationDateInput.required = !isEquipment;
+            const requiresExpirationDate = categorySelect.value !== 'Equipment'
+                && categorySelect.value !== 'Hygiene';
+            expirationDateGroup.classList.toggle('hidden', !requiresExpirationDate);
+            expirationDateInput.disabled = !requiresExpirationDate;
+            expirationDateInput.required = requiresExpirationDate;
         }
 
         function updateBatchFields() {

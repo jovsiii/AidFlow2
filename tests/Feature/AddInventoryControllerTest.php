@@ -35,15 +35,16 @@ it('stores inventory items from the phone form in firebase', function () {
     expect($response->getSession()->get('success'))->toBe('Item added successfully');
 });
 
-it('hides the expiration date when equipment is selected', function () {
+it('hides the expiration date for equipment and hygiene', function () {
     $html = view('phoneFeatures.addInventory', [
         'batches' => collect(),
         'errors' => new MessageBag(),
     ])->render();
 
     expect($html)->toContain('id="expirationDateGroup"')
-        ->and($html)->toContain("categorySelect.value === 'Equipment'")
-        ->and($html)->toContain('expirationDateInput.disabled = isEquipment');
+        ->and($html)->toContain("categorySelect.value !== 'Equipment'")
+        ->and($html)->toContain("categorySelect.value !== 'Hygiene'")
+        ->and($html)->toContain('expirationDateInput.disabled = !requiresExpirationDate');
 });
 
 it('applies toothbrush defaults when the item is selected', function () {
@@ -78,6 +79,34 @@ it('allows equipment items without an expiration date', function () {
         'date_received' => '2026-10-06',
         'batch_option' => 'new',
         'new_batch' => 'New Equipment Batch',
+    ]);
+
+    $controller = new AddInventoryController();
+    $response = $controller->store($request, $firebase);
+
+    expect($response->getSession()->get('success'))->toBe('Item added successfully');
+});
+
+it('allows toothbrush without an expiration date', function () {
+    $firebase = Mockery::mock(FirebaseService::class);
+    $firebase->shouldReceive('createInventory')->once()->with([
+        'name' => 'Toothbrush',
+        'category' => 'Hygiene',
+        'unit' => 'Pieces',
+        'stock' => 1500,
+        'received' => '2026-10-06',
+        'expirationDate' => null,
+        'batch' => 'New Hygiene Batch',
+    ])->andReturn(['id' => 'abc123']);
+
+    $request = new Request([
+        'item_name' => 'Toothbrush',
+        'category' => 'Hygiene',
+        'unit' => 'Pieces',
+        'quantity' => 1500,
+        'date_received' => '2026-10-06',
+        'batch_option' => 'new',
+        'new_batch' => 'New Hygiene Batch',
     ]);
 
     $controller = new AddInventoryController();
