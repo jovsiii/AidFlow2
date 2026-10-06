@@ -66,6 +66,6 @@ class LoginController extends Controller
     /** Choose the home page available to the account's role. */
     private function redirectForRole(?string $role)
     {
-        return redirect()->route($role === 'admin' ? 'features' : 'phoneFeatures');
+        return redirect()->route($role === 'admin' ? 'dashboard' : 'phoneFeatures');
     }
 }
