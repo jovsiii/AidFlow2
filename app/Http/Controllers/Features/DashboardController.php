@@ -66,9 +66,10 @@ class DashboardController extends Controller
             return max(0, (int) round($intercept + ($slope * $nextYear)));
         };
 
-        $forecastFamilyHeads = $predictNextYear('fam');
+        $predictedFamilyHeads = $predictNextYear('fam');
         $familyForecast = (new FfpForecastService(public_path('models/ffp_model.json')))
-            ->predictFamilyOutputs($forecastFamilyHeads);
+            ->predictFamilyOutputs($predictedFamilyHeads);
+        $forecastFamilyHeads = $familyForecast['predictedFamilyHeads'];
         $forecastFfp = $familyForecast['estimatedFamilyFoodPacksNeeded'];
 
         $tents = collect($this->safeFirebaseData($firebase, 'getTents'));
