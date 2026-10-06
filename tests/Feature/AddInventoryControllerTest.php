@@ -69,7 +69,8 @@ it('applies rice defaults while retaining the expiration date input', function (
         ->and($html)->toContain("quantityInput.value = '1800'")
         ->and($html)->toContain("categorySelect.value = 'Food'")
         ->and($html)->toContain("unitSelect.value = 'Kg'")
-        ->and($html)->toContain('id="expiration_date"');
+        ->and($html)->toContain('id="expiration_date"')
+        ->and($html)->toContain('updateItemDefaults();');
 });
 
 it('allows equipment items without an expiration date', function () {

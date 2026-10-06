@@ -236,6 +236,7 @@
         });
         categorySelect.addEventListener('change', updateExpirationDateFields);
         updateItemFields();
+        updateItemDefaults();
         updateExpirationDateFields();
         updateBatchFields();
     </script>
