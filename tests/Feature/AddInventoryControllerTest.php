@@ -53,10 +53,23 @@ it('applies toothbrush defaults when the item is selected', function () {
         'errors' => new MessageBag(),
     ])->render();
 
-    expect($html)->toContain("itemSelect.value !== 'Toothbrush'")
+    expect($html)->toContain("itemSelect.value === 'Toothbrush'")
         ->and($html)->toContain("quantityInput.value = '1500'")
         ->and($html)->toContain("categorySelect.value = 'Hygiene'")
         ->and($html)->toContain("unitSelect.value = 'Pieces'");
+});
+
+it('applies rice defaults while retaining the expiration date input', function () {
+    $html = view('phoneFeatures.addInventory', [
+        'batches' => collect(),
+        'errors' => new MessageBag(),
+    ])->render();
+
+    expect($html)->toContain("itemSelect.value === 'Rice'")
+        ->and($html)->toContain("quantityInput.value = '1800'")
+        ->and($html)->toContain("categorySelect.value = 'Food'")
+        ->and($html)->toContain("unitSelect.value = 'Kg'")
+        ->and($html)->toContain('id="expiration_date"');
 });
 
 it('allows equipment items without an expiration date', function () {

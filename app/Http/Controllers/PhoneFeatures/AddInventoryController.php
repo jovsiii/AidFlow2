@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\FirebaseService;
 use App\Services\InventoryStockStandard;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 /** Supplies the mobile inventory form and creates inventory records from its inputs. */
 class AddInventoryController extends Controller
@@ -42,22 +41,7 @@ class AddInventoryController extends Controller
             'unit' => 'required|string',
             'date_received' => 'nullable|date|required_without:received',
             'received' => 'nullable|date|required_without:date_received',
-            'expiration_date' => [
-                'nullable',
-                'date',
-                Rule::requiredIf(
-                    ! in_array($request->category, ['Equipment', 'Hygiene'], true)
-                    && ! $request->filled('expirationDate')
-                ),
-            ],
-            'expirationDate' => [
-                'nullable',
-                'date',
-                Rule::requiredIf(
-                    ! in_array($request->category, ['Equipment', 'Hygiene'], true)
-                    && ! $request->filled('expiration_date')
-                ),
-            ],
+            'expiration_date' => 'nullable|date',
             'batch_option' => 'required|in:existing,new',
             'batch' => 'nullable|string|max:100|required_if:batch_option,existing',
             'new_batch' => 'nullable|string|max:100|required_if:batch_option,new',
@@ -93,7 +77,7 @@ class AddInventoryController extends Controller
             'unit' => $validated['unit'],
             'stock' => $quantity,
             'received' => $validated['date_received'] ?? $validated['received'] ?? null,
-            'expirationDate' => $validated['expiration_date'] ?? $validated['expirationDate'] ?? null,
+            'expirationDate' => $validated['expiration_date'] ?? null,
             'batch' => $batch,
         ];
 

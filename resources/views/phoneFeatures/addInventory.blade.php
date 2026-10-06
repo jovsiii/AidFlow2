@@ -199,14 +199,18 @@
             otherItemInput.required = isOtherItem;
         }
 
-        function updateToothbrushDefaults() {
-            if (itemSelect.value !== 'Toothbrush') {
-                return;
+        function updateItemDefaults() {
+            if (itemSelect.value === 'Toothbrush') {
+                quantityInput.value = '1500';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Rice') {
+                quantityInput.value = '1800';
+                categorySelect.value = 'Food';
+                unitSelect.value = 'Kg';
             }
 
-            quantityInput.value = '1500';
-            categorySelect.value = 'Hygiene';
-            unitSelect.value = 'Pieces';
+            updateExpirationDateFields();
         }
 
         function updateExpirationDateFields() {
@@ -228,7 +232,7 @@
         batchOptions.forEach(option => option.addEventListener('change', updateBatchFields));
         itemSelect.addEventListener('change', () => {
             updateItemFields();
-            updateToothbrushDefaults();
+            updateItemDefaults();
         });
         categorySelect.addEventListener('change', updateExpirationDateFields);
         updateItemFields();
