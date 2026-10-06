@@ -84,38 +84,42 @@
             </div>
         </div>
 
+        <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm w-full">
+            <h2 class="text-lg text-[#be3d3d] mb-3">Standard Relief Pack Threshold</h2>
+
+            <table class="w-full text-xs text-left border border-gray-300 rounded-lg overflow-hidden bg-white">
+                <caption class="sr-only">Standard relief pack threshold</caption>
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-3 py-2 font-semibold text-gray-700">Standard relief packs</th>
+                        <th class="px-3 py-2 font-semibold text-gray-700 text-right">Threshold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-t border-gray-300">
+                        <td class="px-3 py-2 text-gray-700">
+                            <div class="flex items-center gap-2">
+                                <div class="h-2.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
+                                        style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
+                                </div>
+                                <span class="whitespace-nowrap font-semibold text-[#8a1c1c]">
+                                    {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="px-3 py-2 text-right font-semibold text-gray-700">
+                            {{ number_format($standardReliefPackThreshold) }} packs
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="flex flex-row gap-2 flex-wrap lg:flex-nowrap w-full min-h-[calc(90vh-120px)]">
             {{-- Inventory --}}
             <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-130">
                 <h2 class="text-lg text-[#be3d3d] mb-3">Recent Inventory Transactions</h2>
-
-                <table class="w-full mb-4 text-xs text-left border border-gray-300 rounded-lg overflow-hidden bg-white">
-                    <caption class="sr-only">Standard relief pack threshold</caption>
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-3 py-2 font-semibold text-gray-700">Standard relief packs</th>
-                            <th class="px-3 py-2 font-semibold text-gray-700 text-right">Threshold</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-t border-gray-300">
-                            <td class="px-3 py-2 text-gray-700">
-                                <div class="flex items-center gap-2">
-                                    <div class="h-2.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
-                                            style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
-                                    </div>
-                                    <span class="whitespace-nowrap font-semibold text-[#8a1c1c]">
-                                        {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-3 py-2 text-right font-semibold text-gray-700">
-                                {{ number_format($standardReliefPackThreshold) }} packs
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
 
                 <div class="border border-gray-400 rounded-[14px] overflow-hidden flex-1 mb-4 flex flex-col">
                     <div class="overflow-y-auto">
