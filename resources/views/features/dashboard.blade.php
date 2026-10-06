@@ -84,9 +84,9 @@
             </div>
         </div>
 
-        <div class="flex flex-row gap-2 flex-wrap lg:flex-nowrap w-full min-h-[calc(90vh-120px)]">
+        <div class="flex flex-row gap-2 flex-wrap lg:flex-nowrap w-full h-[calc(90vh-120px)] min-h-[500px]">
             {{-- Inventory --}}
-            <div class="flex flex-col gap-4 w-130 shrink-0">
+            <div class="flex flex-col gap-4 w-130 shrink-0 h-full">
                 <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm w-full">
                     <div class="flex items-center justify-between gap-3 mb-3">
                         <p class="text-sm font-semibold text-[#8a1c1c]">Standard relief packs</p>
@@ -106,7 +106,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-full">
+                <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-full h-[calc(100%-5rem)]">
                     <h2 class="text-lg text-[#be3d3d] mb-3">Recent Inventory Transactions</h2>
 
                     <div class="border border-gray-400 rounded-[14px] overflow-hidden flex-1 mb-4 flex flex-col">
