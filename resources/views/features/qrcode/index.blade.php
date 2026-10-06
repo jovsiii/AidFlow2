@@ -21,6 +21,7 @@
                 <div id="tentField" class="space-y-2">
                     <label for="tentCodeSelect" class="block text-sm font-medium text-gray-700 mb-1">Tent Code</label>
                     <select id="tentCodeSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                    <p class="text-sm text-gray-500">The PDF export includes QR codes for every tent.</p>
                 </div>
 
                 <div id="foodField" class="space-y-2 hidden">
@@ -28,8 +29,8 @@
                     <div id="foodPackDisplay" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 font-medium">Relief Pack: #1 to #10</div>
                 </div>
 
-                <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
-                    <i class="fas fa-qrcode mr-2"></i> Generate &amp; Download PDF
+                <button id="downloadQrPdf" type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+                    <i class="fas fa-qrcode mr-2"></i> <span id="downloadQrPdfLabel">Download All Tent QR Codes as PDF</span>
                 </button>
             </form>
 
@@ -55,17 +56,21 @@
     const qrPreviewLabel = document.getElementById('qrPreviewLabel');
     const qrOutput = document.getElementById('qrOutput');
     const qrCode = document.getElementById('qrCode');
+    const downloadQrPdfLabel = document.getElementById('downloadQrPdfLabel');
     const PACK_COUNTER_KEY = 'aidflow_relief_pack_counter';
     const MAX_RELIEF_PACKS = 10;
 
-    function buildTentOptions() {
-        const tentCodes = [];
+    function getTentEntries() {
+        return barangayList.flatMap((barangay) =>
+            Object.entries(barangay.tents).map(([code, name]) => ({
+                code,
+                name,
+            }))
+        );
+    }
 
-        barangayList.forEach((barangay) => {
-            Object.keys(barangay.tents).forEach((tentCode) => {
-                tentCodes.push(tentCode);
-            });
-        });
+    function buildTentOptions() {
+        const tentCodes = getTentEntries().map(({ code }) => code);
 
         tentCodeSelect.innerHTML = tentCodes.map((tentCode) => `
             <option value="${tentCode}">${tentCode}</option>
@@ -93,6 +98,9 @@
         tentField.classList.toggle('hidden', isFoodPack);
         foodField.classList.toggle('hidden', !isFoodPack);
         qrPreviewLabel.textContent = isFoodPack ? 'Food Pack' : 'Tent Code';
+        downloadQrPdfLabel.textContent = isFoodPack
+            ? 'Download All Food Pack QR Codes as PDF'
+            : 'Download All Tent QR Codes as PDF';
 
         if (isFoodPack) {
             foodPackDisplay.textContent = rangeLabel();
@@ -115,6 +123,85 @@
             : `${tentCodeSelect.value}`;
 
         generateQrCodeForText(qrText);
+    }
+
+    function downloadTentQrPdf() {
+        const tents = getTentEntries();
+
+        if (!tents.length) {
+            window.alert('No tent codes are available to export.');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const columns = 3;
+        const rowsPerPage = 4;
+        const itemsPerPage = columns * rowsPerPage;
+        const marginX = 9;
+        const marginTop = 23;
+        const marginBottom = 10;
+        const cellWidth = (pageWidth - marginX * 2) / columns;
+        const cellHeight = (pageHeight - marginTop - marginBottom) / rowsPerPage;
+        const qrSize = 34;
+        const pageCount = Math.ceil(tents.length / itemsPerPage);
+
+        function drawPageHeader(pageNumber) {
+            doc.setFillColor(255, 248, 248);
+            doc.rect(0, 0, pageWidth, 18, 'F');
+            doc.setTextColor(138, 28, 28);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('AidFlow Tent QR Codes', pageWidth / 2, 9, { align: 'center' });
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth / 2, 15, { align: 'center' });
+        }
+
+        tents.forEach((tent, index) => {
+            const pageIndex = Math.floor(index / itemsPerPage);
+            const itemIndex = index % itemsPerPage;
+            const rowIndex = Math.floor(itemIndex / columns);
+            const columnIndex = itemIndex % columns;
+
+            if (itemIndex === 0) {
+                if (pageIndex > 0) {
+                    doc.addPage();
+                }
+                drawPageHeader(pageIndex + 1);
+            }
+
+            const cellX = marginX + columnIndex * cellWidth;
+            const cellY = marginTop + rowIndex * cellHeight;
+            const qr = qrcode(0, 'M');
+            qr.addData(tent.code);
+            qr.make();
+
+            doc.setDrawColor(220, 220, 220);
+            doc.roundedRect(cellX + 2, cellY + 2, cellWidth - 4, cellHeight - 4, 2, 2, 'S');
+            doc.addImage(
+                qr.createDataURL(10, 0),
+                'PNG',
+                cellX + (cellWidth - qrSize) / 2,
+                cellY + 4,
+                qrSize,
+                qrSize
+            );
+            doc.setTextColor(30, 41, 59);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.text(tent.name, cellX + cellWidth / 2, cellY + 43, {
+                align: 'center',
+                maxWidth: cellWidth - 8,
+            });
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.text(tent.code, cellX + cellWidth / 2, cellY + 53, { align: 'center' });
+        });
+
+        doc.save('tent-qr-codes-all.pdf');
     }
 
     function downloadReliefPackPdf() {
@@ -196,7 +283,7 @@
             return;
         }
 
-        generateQrCode();
+        downloadTentQrPdf();
     });
 
     buildTentOptions();
