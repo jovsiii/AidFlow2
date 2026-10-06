@@ -144,6 +144,22 @@
                     <div id="dashboard-map" class="w-full h-full"></div>
                 </div>
 
+                <div class="flex flex-wrap items-center gap-3 mb-4 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-700"
+                     aria-label="Evacuation map legend">
+                    <span class="flex items-center gap-1.5">
+                        <span class="h-3 w-3 rounded-full bg-[#289432]" aria-hidden="true"></span>
+                        Free
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="h-3 w-3 rounded-full bg-[#948628]" aria-hidden="true"></span>
+                        Occupied
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="h-3 w-3 rounded-full bg-[#ef4444]" aria-hidden="true"></span>
+                        Full
+                    </span>
+                </div>
+
                 <!-- Recent Scanned Tents -->
                 <div
                     class="border border-gray-400 rounded-br-[14px] rounded-bl-[14px] overflow-hidden flex-1 flex flex-col">
