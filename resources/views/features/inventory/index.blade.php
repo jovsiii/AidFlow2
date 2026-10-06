@@ -45,19 +45,6 @@
             <div class="shrink-0 mr-4">
                 <div
                     class="w-15 h-15 rounded-[18px] border-[3px] border-[#8a1c1c] bg-[#ff6b6b] flex items-center justify-center">
-                    <i class="fas fa-campground text-2xl text-[#1f0000]"></i>
-                </div>
-            </div>
-            <div>
-                <p class="text-xs text-gray-700 mb-0.5 whitespace-nowrap">Low Stock Items</p>
-                <p class="text-[28px] leading-none font-medium">{{ number_format($lowStockItems ?? 0) }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 flex items-center shadow-sm w-full">
-            <div class="shrink-0 mr-4">
-                <div
-                    class="w-15 h-15 rounded-[18px] border-[3px] border-[#8a1c1c] bg-[#ff6b6b] flex items-center justify-center">
                     <i class="fas fa-university text-2xl text-[#1f0000]"></i>
                 </div>
             </div>
@@ -112,10 +99,7 @@
                                 $statusLabel = 'Good';
                                 $statusClass = 'text-green-600 font-bold';
 
-                                if ($item['isLowStock'] ?? false) {
-                                    $statusLabel = 'Low Stock';
-                                    $statusClass = 'text-red-600 font-bold';
-                                } elseif ($expirationDate) {
+                                if ($expirationDate) {
                                     $parsedDate = \Carbon\Carbon::parse($expirationDate);
                                     if ($parsedDate->lt($today)) {
                                         $statusLabel = 'Expired';
