@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\FirebaseService;
 use App\Services\InventoryStockStandard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 /** Supplies the mobile inventory form and creates inventory records from its inputs. */
 class AddInventoryController extends Controller
@@ -41,8 +42,22 @@ class AddInventoryController extends Controller
             'unit' => 'required|string',
             'date_received' => 'nullable|date|required_without:received',
             'received' => 'nullable|date|required_without:date_received',
-            'expiration_date' => 'nullable|date|required_without:expirationDate',
-            'expirationDate' => 'nullable|date|required_without:expiration_date',
+            'expiration_date' => [
+                'nullable',
+                'date',
+                Rule::requiredIf(
+                    $request->category !== 'Equipment'
+                    && ! $request->filled('expirationDate')
+                ),
+            ],
+            'expirationDate' => [
+                'nullable',
+                'date',
+                Rule::requiredIf(
+                    $request->category !== 'Equipment'
+                    && ! $request->filled('expiration_date')
+                ),
+            ],
             'batch_option' => 'required|in:existing,new',
             'batch' => 'nullable|string|max:100|required_if:batch_option,existing',
             'new_batch' => 'nullable|string|max:100|required_if:batch_option,new',

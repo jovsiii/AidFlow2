@@ -46,6 +46,34 @@ it('hides the expiration date when equipment is selected', function () {
         ->and($html)->toContain('expirationDateInput.disabled = isEquipment');
 });
 
+it('allows equipment items without an expiration date', function () {
+    $firebase = Mockery::mock(FirebaseService::class);
+    $firebase->shouldReceive('createInventory')->once()->with([
+        'name' => 'Nail Cutter',
+        'category' => 'Equipment',
+        'unit' => 'Piece',
+        'stock' => 5,
+        'received' => '2026-10-06',
+        'expirationDate' => null,
+        'batch' => 'New Equipment Batch',
+    ])->andReturn(['id' => 'abc123']);
+
+    $request = new Request([
+        'item_name' => 'Nail Cutter',
+        'category' => 'Equipment',
+        'unit' => 'Piece',
+        'quantity' => 5,
+        'date_received' => '2026-10-06',
+        'batch_option' => 'new',
+        'new_batch' => 'New Equipment Batch',
+    ]);
+
+    $controller = new AddInventoryController();
+    $response = $controller->store($request, $firebase);
+
+    expect($response->getSession()->get('success'))->toBe('Item added successfully');
+});
+
 it('prevents adding stock beyond the maximum standard for an existing batch', function () {
     $firebase = Mockery::mock(FirebaseService::class);
     $firebase->shouldReceive('getInventory')->once()->andReturn([
