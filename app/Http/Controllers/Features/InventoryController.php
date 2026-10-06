@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Features;
 
 use App\Http\Controllers\Controller;
 use App\Services\FirebaseService;
+use App\Services\InventoryStockStandard;
 use App\Services\ReliefPackCalculator;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,14 @@ class InventoryController extends Controller
     public function index(Request $request, FirebaseService $firebase, ?ReliefPackCalculator $reliefPackCalculator = null)
     {
         $reliefPackCalculator ??= new ReliefPackCalculator();
+        $stockStandard = new InventoryStockStandard();
         $inventoryItems = $this->normalizeInventoryItems($firebase->getInventory());
+        $inventoryItems = $inventoryItems->map(function ($item) use ($stockStandard) {
+            $item['maximumStock'] = $stockStandard->maximumStockFor($item);
+            $item['isLowStock'] = $stockStandard->isLowStock($item);
+
+            return $item;
+        });
         $batchGroups = $inventoryItems
             ->filter(fn ($item) => filled($item['batch'] ?? null))
             ->groupBy(fn ($item) => (string) $item['batch'])
@@ -72,7 +80,7 @@ class InventoryController extends Controller
 
         $today = now()->startOfDay();
         $totalItems = $inventoryItems->count();
-        $lowStockItems = $inventoryItems->filter(fn($item) => (int) ($item['stock'] ?? 0) <= 50)->count();
+        $lowStockItems = $inventoryItems->filter(fn($item) => $item['isLowStock'] ?? false)->count();
         $goodItems = $inventoryItems->filter(function ($item) use ($today) {
             $expirationDate = $item['expirationDate'] ?? null;
 

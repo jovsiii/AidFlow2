@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PhoneFeatures;
 
 use App\Http\Controllers\Controller;
 use App\Services\FirebaseService;
+use App\Services\InventoryStockStandard;
 use Illuminate\Http\Request;
 
 /** Supplies the mobile inventory form and creates inventory records from its inputs. */
@@ -50,14 +51,32 @@ class AddInventoryController extends Controller
         $batch = trim($validated['batch_option'] === 'new'
             ? $validated['new_batch']
             : $validated['batch']);
+        $itemName = ($validated['item_name'] ?? null) === 'Other'
+            ? $validated['other_item_name']
+            : ($validated['item_name'] ?? $validated['name'] ?? null);
+        $quantity = (int) ($validated['quantity'] ?? $validated['stock'] ?? 0);
+
+        if ($validated['batch_option'] === 'existing') {
+            $stockStandard = new InventoryStockStandard();
+            $existingStock = collect($firebase->getInventory())
+                ->filter(fn ($item) => is_array($item)
+                    && (string) ($item['batch'] ?? '') === $batch
+                    && mb_strtolower(trim((string) ($item['name'] ?? ''))) === mb_strtolower(trim($itemName)))
+                ->sum(fn ($item) => max(0, (int) ($item['stock'] ?? 0)));
+            $maximum = $stockStandard->maximumStockFor(['name' => $itemName]);
+
+            if ($maximum !== null && $existingStock + $quantity > $maximum) {
+                return redirect()->back()
+                    ->withErrors(['batch' => "This item would exceed its maximum stock standard of {$maximum} for batch {$batch}."])
+                    ->withInput();
+            }
+        }
 
         $payload = [
-            'name' => ($validated['item_name'] ?? null) === 'Other'
-                ? $validated['other_item_name']
-                : ($validated['item_name'] ?? $validated['name'] ?? null),
+            'name' => $itemName,
             'category' => $validated['category'],
             'unit' => $validated['unit'],
-            'stock' => (int) ($validated['quantity'] ?? $validated['stock'] ?? 0),
+            'stock' => $quantity,
             'received' => $validated['date_received'] ?? $validated['received'] ?? null,
             'expirationDate' => $validated['expiration_date'] ?? $validated['expirationDate'] ?? null,
             'batch' => $batch,

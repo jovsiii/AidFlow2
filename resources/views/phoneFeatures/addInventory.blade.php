@@ -153,7 +153,7 @@
                     <input id="date_received" name="date_received" type="date"
                         class="w-full rounded-[28px] border border-gray-300 bg-gray-100 px-5 py-4 text-lg text-[#1F1F1F] focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-100" />
                 </div>
-                <div>
+                <div id="expirationDateGroup">
                     <label for="expiration_date" class="ml-4 font-bold">Expiration Date</label>
                     <input id="expiration_date" name="expiration_date" type="date"
                         class="w-full rounded-[28px] border border-gray-300 bg-gray-100 px-5 py-4 text-lg text-[#1F1F1F] focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-100" />
@@ -187,11 +187,21 @@
         const newBatchInput = document.getElementById('new_batch');
         const itemSelect = document.getElementById('item_name');
         const otherItemInput = document.getElementById('other_item_name');
+        const categorySelect = document.getElementById('category');
+        const expirationDateGroup = document.getElementById('expirationDateGroup');
+        const expirationDateInput = document.getElementById('expiration_date');
 
         function updateItemFields() {
             const isOtherItem = itemSelect.value === 'Other';
             otherItemInput.classList.toggle('hidden', !isOtherItem);
             otherItemInput.required = isOtherItem;
+        }
+
+        function updateExpirationDateFields() {
+            const isEquipment = categorySelect.value === 'Equipment';
+            expirationDateGroup.classList.toggle('hidden', isEquipment);
+            expirationDateInput.disabled = isEquipment;
+            expirationDateInput.required = !isEquipment;
         }
 
         function updateBatchFields() {
@@ -204,7 +214,9 @@
 
         batchOptions.forEach(option => option.addEventListener('change', updateBatchFields));
         itemSelect.addEventListener('change', updateItemFields);
+        categorySelect.addEventListener('change', updateExpirationDateFields);
         updateItemFields();
+        updateExpirationDateFields();
         updateBatchFields();
     </script>
 </body>

@@ -3,9 +3,11 @@
 use App\Http\Controllers\PhoneFeatures\AddInventoryController;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 
 it('stores inventory items from the phone form in firebase', function () {
     $firebase = Mockery::mock(FirebaseService::class);
+    $firebase->shouldReceive('getInventory')->once()->andReturn([]);
     $firebase->shouldReceive('createInventory')->once()->with([
         'name' => 'Rice',
         'category' => 'Food',
@@ -31,4 +33,43 @@ it('stores inventory items from the phone form in firebase', function () {
     $response = $controller->store($request, $firebase);
 
     expect($response->getSession()->get('success'))->toBe('Item added successfully');
+});
+
+it('hides the expiration date when equipment is selected', function () {
+    $html = view('phoneFeatures.addInventory', [
+        'batches' => collect(),
+        'errors' => new MessageBag(),
+    ])->render();
+
+    expect($html)->toContain('id="expirationDateGroup"')
+        ->and($html)->toContain("categorySelect.value === 'Equipment'")
+        ->and($html)->toContain('expirationDateInput.disabled = isEquipment');
+});
+
+it('prevents adding stock beyond the maximum standard for an existing batch', function () {
+    $firebase = Mockery::mock(FirebaseService::class);
+    $firebase->shouldReceive('getInventory')->once()->andReturn([
+        'item-1' => [
+            'name' => 'Toothbrush',
+            'batch' => 'Batch 1',
+            'stock' => 1500,
+        ],
+    ]);
+    $firebase->shouldNotReceive('createInventory');
+
+    $request = new Request([
+        'item_name' => 'Toothbrush',
+        'category' => 'Equipment',
+        'unit' => 'Piece',
+        'quantity' => 1,
+        'date_received' => '2026-10-06',
+        'expiration_date' => '2026-12-31',
+        'batch_option' => 'existing',
+        'batch' => 'Batch 1',
+    ]);
+
+    $controller = new AddInventoryController();
+    $response = $controller->store($request, $firebase);
+
+    expect($response->getSession()->get('errors')->first())->toContain('maximum stock');
 });

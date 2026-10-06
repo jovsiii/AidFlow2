@@ -108,10 +108,14 @@
                         @forelse ($inventoryItems as $item)
                             @php
                                 $expirationDate = $item['expirationDate'] ?? null;
+                                $maximumStock = $item['maximumStock'] ?? null;
                                 $statusLabel = 'Good';
                                 $statusClass = 'text-green-600 font-bold';
 
-                                if ($expirationDate) {
+                                if ($item['isLowStock'] ?? false) {
+                                    $statusLabel = 'Low Stock';
+                                    $statusClass = 'text-red-600 font-bold';
+                                } elseif ($expirationDate) {
                                     $parsedDate = \Carbon\Carbon::parse($expirationDate);
                                     if ($parsedDate->lt($today)) {
                                         $statusLabel = 'Expired';
@@ -126,7 +130,7 @@
                                 <td class="py-2">{{ $item['name'] ?? 'Unnamed Item' }}</td>
                                 <td>{{ $item['category'] ?? 'Uncategorized' }}</td>
                                 <td>{{ $item['unit'] ?? '-' }}</td>
-                                <td>{{ $item['stock'] ?? 0 }}</td>
+                                <td>{{ $item['stock'] ?? 0 }}{{ $maximumStock !== null ? " / {$maximumStock}" : '' }}</td>
                                 <td>{{ $expirationDate ? \Carbon\Carbon::parse($expirationDate)->format('m/d/y') : '—' }}</td>
                                 <td class="{{ $statusClass }}">{{ $statusLabel }}</td>
                             </tr>
