@@ -122,7 +122,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($inventory->take(8) as $index => $item)
+                                    @forelse($inventory as $index => $item)
                                         @php
                                             $isOut = $index === 2 || $index === 6 || $index === 7;
                                             $typeStr = $isOut ? 'Stock-Out' : 'Stock-In';
