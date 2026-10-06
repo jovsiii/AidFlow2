@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Features;
 
 use App\Http\Controllers\Controller;
 use App\Services\FirebaseService;
+use App\Services\FfpForecastService;
 use App\Services\ReliefPackCalculator;
 
 /** Collects inventory, evacuation, audit, and forecast data for the operations dashboard. */
@@ -65,8 +66,10 @@ class DashboardController extends Controller
             return max(0, (int) round($intercept + ($slope * $nextYear)));
         };
 
-        $forecastFfp = $predictNextYear('ffp');
         $forecastFamilyHeads = $predictNextYear('fam');
+        $familyForecast = (new FfpForecastService(public_path('models/ffp_model.json')))
+            ->predictFamilyOutputs($forecastFamilyHeads);
+        $forecastFfp = $familyForecast['estimatedFamilyFoodPacksNeeded'];
 
         $tents = collect($this->safeFirebaseData($firebase, 'getTents'));
 

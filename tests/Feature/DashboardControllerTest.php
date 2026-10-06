@@ -21,6 +21,6 @@ it('passes occupancy counts and barangay summary from occupied tents', function 
                 'BB' => 2,
                 'WC' => 1,
             ])
-        ->and($response->getData()['forecastFfp'])->toBe(1602)
+        ->and($response->getData()['forecastFfp'])->toBe(664.4)
         ->and($response->getData()['forecastFamilyHeads'])->toBe(318);
 });

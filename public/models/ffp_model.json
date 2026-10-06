@@ -1,0 +1,154 @@
+{
+  "trained_on_events": [
+    "Carina",
+    "Egay",
+    "Fabian",
+    "Karding",
+    "Kristine",
+    "Ulysses",
+    "Uwan"
+  ],
+  "avg_household_size": 3.92,
+  "ffp_per_person": {
+    "lean": 0.341,
+    "expected": 0.533,
+    "high": 1.136
+  },
+  "ffp_per_person_by_event": {
+    "Carina": 1.044,
+    "Egay": 0.533,
+    "Fabian": 1.136,
+    "Karding": 0.5,
+    "Kristine": 0.539,
+    "Ulysses": 0.341,
+    "Uwan": 0.531
+  },
+  "tier_basis": {
+    "lean": "Ulysses",
+    "expected": "median of typhoons",
+    "high": "Fabian"
+  },
+  "barangay_share": {
+    "Addition Hills": 0.0391,
+    "Balong Bato": 0.0662,
+    "Batis": 0.2438,
+    "Corazon de Jesus": 0.0357,
+    "Ermita\u00f1o": 0.1297,
+    "Kabayanan": 0.051,
+    "Pedro Cruz": 0.0766,
+    "Progreso": 0.1816,
+    "Rivera": 0.1438,
+    "Salapan": 0.2584
+  },
+  "barangay_events_seen": {
+    "Addition Hills": 1,
+    "Balong Bato": 5,
+    "Batis": 7,
+    "Corazon de Jesus": 1,
+    "Ermita\u00f1o": 6,
+    "Kabayanan": 1,
+    "Pedro Cruz": 2,
+    "Progreso": 6,
+    "Rivera": 7,
+    "Salapan": 7
+  },
+  "core_barangays": [
+    "Balong Bato",
+    "Batis",
+    "Ermita\u00f1o",
+    "Progreso",
+    "Rivera",
+    "Salapan"
+  ],
+  "add_secondary_barangays_above_city_individuals": 1280,
+  "cv": [
+    {
+      "model": "Ratio model (median ratio x evacuees)",
+      "barangay_MAE_packs": 57.39,
+      "event_total_MAPE_%": 24.19
+    },
+    {
+      "model": "Random forest",
+      "barangay_MAE_packs": 83.81,
+      "event_total_MAPE_%": 35.7
+    },
+    {
+      "model": "Linear regression (individuals+families)",
+      "barangay_MAE_packs": 55.33,
+      "event_total_MAPE_%": 36.55
+    },
+    {
+      "model": "Linear regression, no intercept",
+      "barangay_MAE_packs": 104.97,
+      "event_total_MAPE_%": 41.57
+    },
+    {
+      "model": "Gradient boosting",
+      "barangay_MAE_packs": 102.19,
+      "event_total_MAPE_%": 46.62
+    },
+    {
+      "model": "Poisson GLM",
+      "barangay_MAE_packs": 132.2,
+      "event_total_MAPE_%": 175.52
+    }
+  ],
+  "band_coverage": {
+    "Carina": {
+      "actual": 1.044,
+      "band": [
+        0.341,
+        1.136
+      ],
+      "inside": true
+    },
+    "Egay": {
+      "actual": 0.533,
+      "band": [
+        0.341,
+        1.136
+      ],
+      "inside": true
+    },
+    "Fabian": {
+      "actual": 1.136,
+      "band": [
+        0.341,
+        1.044
+      ],
+      "inside": false
+    },
+    "Karding": {
+      "actual": 0.5,
+      "band": [
+        0.341,
+        1.136
+      ],
+      "inside": true
+    },
+    "Kristine": {
+      "actual": 0.539,
+      "band": [
+        0.341,
+        1.136
+      ],
+      "inside": true
+    },
+    "Ulysses": {
+      "actual": 0.341,
+      "band": [
+        0.5,
+        1.136
+      ],
+      "inside": false
+    },
+    "Uwan": {
+      "actual": 0.531,
+      "band": [
+        0.341,
+        1.136
+      ],
+      "inside": true
+    }
+  }
+}
