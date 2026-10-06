@@ -118,6 +118,10 @@
     }
 
     function downloadReliefPackPdf() {
+        qrPreviewLabel.textContent = 'Food Pack';
+        foodPackDisplay.textContent = rangeLabel();
+        generateQrCodeForText('#1');
+
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ unit: 'mm', format: 'a4' });
 
@@ -137,8 +141,6 @@
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(12);
         doc.text('AidFlow Relief Pack QR Sheet', pageWidth / 2, 11, { align: 'center' });
-
-        let pagePackIndex = 1;
 
         for (let pack = 1; pack <= MAX_RELIEF_PACKS; pack++) {
             const rowIndex = Math.floor((pack - 1) / cols) % rowsPerPage;
@@ -168,12 +170,10 @@
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(12);
                 doc.text('AidFlow Relief Pack QR Sheet', pageWidth / 2, 11, { align: 'center' });
-                pagePackIndex = pack + 1;
             }
         }
 
         doc.save('relief-pack-qr-codes.pdf');
-        generateQrCodeForText('#1');
     }
 
     qrType.addEventListener('change', () => {
