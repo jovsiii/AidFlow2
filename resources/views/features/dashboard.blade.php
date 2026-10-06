@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm w-full">
+        <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm w-130">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-[#8a1c1c]">Standard relief packs</p>
