@@ -46,6 +46,18 @@ it('hides the expiration date when equipment is selected', function () {
         ->and($html)->toContain('expirationDateInput.disabled = isEquipment');
 });
 
+it('applies toothbrush defaults when the item is selected', function () {
+    $html = view('phoneFeatures.addInventory', [
+        'batches' => collect(),
+        'errors' => new MessageBag(),
+    ])->render();
+
+    expect($html)->toContain("itemSelect.value !== 'Toothbrush'")
+        ->and($html)->toContain("quantityInput.value = '1500'")
+        ->and($html)->toContain("categorySelect.value = 'Hygiene'")
+        ->and($html)->toContain("unitSelect.value = 'Pieces'");
+});
+
 it('allows equipment items without an expiration date', function () {
     $firebase = Mockery::mock(FirebaseService::class);
     $firebase->shouldReceive('createInventory')->once()->with([

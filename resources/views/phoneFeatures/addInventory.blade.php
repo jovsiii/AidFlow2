@@ -187,7 +187,9 @@
         const newBatchInput = document.getElementById('new_batch');
         const itemSelect = document.getElementById('item_name');
         const otherItemInput = document.getElementById('other_item_name');
+        const quantityInput = document.getElementById('quantity');
         const categorySelect = document.getElementById('category');
+        const unitSelect = document.getElementById('unit');
         const expirationDateGroup = document.getElementById('expirationDateGroup');
         const expirationDateInput = document.getElementById('expiration_date');
 
@@ -195,6 +197,16 @@
             const isOtherItem = itemSelect.value === 'Other';
             otherItemInput.classList.toggle('hidden', !isOtherItem);
             otherItemInput.required = isOtherItem;
+        }
+
+        function updateToothbrushDefaults() {
+            if (itemSelect.value !== 'Toothbrush') {
+                return;
+            }
+
+            quantityInput.value = '1500';
+            categorySelect.value = 'Hygiene';
+            unitSelect.value = 'Pieces';
         }
 
         function updateExpirationDateFields() {
@@ -213,7 +225,10 @@
         }
 
         batchOptions.forEach(option => option.addEventListener('change', updateBatchFields));
-        itemSelect.addEventListener('change', updateItemFields);
+        itemSelect.addEventListener('change', () => {
+            updateItemFields();
+            updateToothbrushDefaults();
+        });
         categorySelect.addEventListener('change', updateExpirationDateFields);
         updateItemFields();
         updateExpirationDateFields();
