@@ -86,72 +86,71 @@
 
         <div class="flex flex-row gap-2 flex-wrap lg:flex-nowrap w-full min-h-[calc(90vh-120px)]">
             {{-- Inventory --}}
-            <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-130">
-                <h2 class="text-lg text-[#be3d3d] mb-3">Recent Inventory Transactions</h2>
-
-                <div class="bg-gray-50 rounded-lg border border-gray-300 p-3 mb-4">
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wide text-[#8a1c1c]">Standard relief packs</p>
-                            <p class="mt-1 text-sm text-gray-700">
-                                {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
-                            </p>
-                        </div>
-
-                        <div class="flex-1 sm:max-w-md">
-                            <div class="h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                                <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
-                                    style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
-                            </div>
-                        </div>
-
+            <div class="flex flex-col gap-4 w-130 shrink-0">
+                <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm w-full">
+                    <div class="flex items-center justify-between gap-3 mb-3">
+                        <p class="text-sm font-semibold text-[#8a1c1c]">Standard relief packs</p>
                         <p class="whitespace-nowrap text-sm font-semibold text-gray-700">
                             Threshold: {{ number_format($standardReliefPackThreshold) }} packs
                         </p>
                     </div>
-                </div>
 
-                <div class="border border-gray-400 rounded-[14px] overflow-hidden flex-1 mb-4 flex flex-col">
-                    <div class="overflow-y-auto">
-                        <table class="w-full text-xs text-left">
-                            <thead>
-                                <tr class="border-b border-gray-300">
-                                    <th class="px-3 py-2 font-normal text-gray-800">Date</th>
-                                    <th class="px-3 py-2 font-normal text-gray-800">Type</th>
-                                    <th class="px-3 py-2 font-normal text-gray-800">Item</th>
-                                    <th class="px-3 py-2 font-normal text-gray-800">Category</th>
-                                    <th class="px-3 py-2 font-normal text-gray-800 text-right">Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($inventory->take(8) as $index => $item)
-                                    @php
-                                        $isOut = $index === 2 || $index === 6 || $index === 7;
-                                        $typeStr = $isOut ? 'Stock-Out' : 'Stock-In';
-                                        $typeColor = $isOut ? 'text-red-500' : 'text-green-500';
-                                        $dateStr = !empty($item['received']) ?
-                                            \Carbon\Carbon::parse($item['received'])->format('m/d/y') : date('m/d/y');
-                                    @endphp
-                                    <tr>
-                                        <td class="px-3 py-1.5 text-gray-700 whitespace-nowrap">{{ $dateStr }}</td>
-                                        <td class="px-3 py-1.5 {{ $typeColor }}">{{ $typeStr }}</td>
-                                        <td class="px-3 py-1.5 text-gray-700">{{ $item['name'] ?? 'Item' }}</td>
-                                        <td class="px-3 py-1.5 text-gray-700">{{ $item['category'] ?? 'Category' }}</td>
-                                        <td class="px-3 py-1.5 text-gray-700 text-right">{{ $item['stock'] ?? 0 }}
-                                            {{ $item['unit'] ?? '' }}
-                                        </td>
-                                    </tr>
-                                @empty
-
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <div class="flex items-center gap-3">
+                        <div class="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#d94b4b] rounded-full transition-all duration-500"
+                                style="width: {{ min(100, ($standardReliefPacks / $standardReliefPackThreshold) * 100) }}%"></div>
+                        </div>
+                        <p class="whitespace-nowrap text-sm font-semibold text-[#8a1c1c]">
+                            {{ number_format($standardReliefPacks) }} / {{ number_format($standardReliefPackThreshold) }}
+                        </p>
                     </div>
                 </div>
-                <div class="flex justify-end mt-auto pt-2">
-                    <a href="{{ route('inventory.index') }}"
-                        class="px-5 py-1 bg-[#faa8a8] text-[#1f0000] border border-[#d97c7c] rounded-full text-sm hover:bg-[#ffbaba] transition">View
-                        All</a>
+
+                <div class="bg-white rounded-[20px] border-[3px] border-[#8a1c1c] p-4 shadow-sm flex flex-col w-full">
+                    <h2 class="text-lg text-[#be3d3d] mb-3">Recent Inventory Transactions</h2>
+
+                    <div class="border border-gray-400 rounded-[14px] overflow-hidden flex-1 mb-4 flex flex-col">
+                        <div class="overflow-y-auto">
+                            <table class="w-full text-xs text-left">
+                                <thead>
+                                    <tr class="border-b border-gray-300">
+                                        <th class="px-3 py-2 font-normal text-gray-800">Date</th>
+                                        <th class="px-3 py-2 font-normal text-gray-800">Type</th>
+                                        <th class="px-3 py-2 font-normal text-gray-800">Item</th>
+                                        <th class="px-3 py-2 font-normal text-gray-800">Category</th>
+                                        <th class="px-3 py-2 font-normal text-gray-800 text-right">Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($inventory->take(8) as $index => $item)
+                                        @php
+                                            $isOut = $index === 2 || $index === 6 || $index === 7;
+                                            $typeStr = $isOut ? 'Stock-Out' : 'Stock-In';
+                                            $typeColor = $isOut ? 'text-red-500' : 'text-green-500';
+                                            $dateStr = !empty($item['received']) ?
+                                                \Carbon\Carbon::parse($item['received'])->format('m/d/y') : date('m/d/y');
+                                        @endphp
+                                        <tr>
+                                            <td class="px-3 py-1.5 text-gray-700 whitespace-nowrap">{{ $dateStr }}</td>
+                                            <td class="px-3 py-1.5 {{ $typeColor }}">{{ $typeStr }}</td>
+                                            <td class="px-3 py-1.5 text-gray-700">{{ $item['name'] ?? 'Item' }}</td>
+                                            <td class="px-3 py-1.5 text-gray-700">{{ $item['category'] ?? 'Category' }}</td>
+                                            <td class="px-3 py-1.5 text-gray-700 text-right">{{ $item['stock'] ?? 0 }}
+                                                {{ $item['unit'] ?? '' }}
+                                            </td>
+                                        </tr>
+                                    @empty
+
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-auto pt-2">
+                        <a href="{{ route('inventory.index') }}"
+                            class="px-5 py-1 bg-[#faa8a8] text-[#1f0000] border border-[#d97c7c] rounded-full text-sm hover:bg-[#ffbaba] transition">View
+                            All</a>
+                    </div>
                 </div>
             </div>
 
