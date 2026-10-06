@@ -110,8 +110,10 @@
                     <option>Pack</option>
                     <option>Packs</option>
                     <option>Bottle</option>
+                    <option>Bottles</option>
                     <option>Grams</option>
                     <option>Set</option>
+                    <option>Sets</option>
                     <option>Sachets</option>
                     <option>Litre</option>
                     <option>Kg</option>
@@ -192,6 +194,16 @@
         const unitSelect = document.getElementById('unit');
         const expirationDateGroup = document.getElementById('expirationDateGroup');
         const expirationDateInput = document.getElementById('expiration_date');
+        const expirationRequiredItems = new Set([
+            'Canned Sardines',
+            'Canned Tuna',
+            'Canned Beef Loaf',
+            'Coffee or Energy Drinks',
+            'Toothpaste',
+            'Shampoo',
+            'Bath Bar Soap',
+            'Sanitary Napkin'
+        ]);
 
         function updateItemFields() {
             const isOtherItem = itemSelect.value === 'Other';
@@ -212,14 +224,81 @@
                 quantityInput.value = '1500';
                 categorySelect.value = 'Food';
                 unitSelect.value = 'Cans';
+            } else if (itemSelect.value === 'Canned Tuna') {
+                quantityInput.value = '1500';
+                categorySelect.value = 'Food';
+                unitSelect.value = 'Cans';
+            } else if (itemSelect.value === 'Canned Beef Loaf') {
+                quantityInput.value = '1500';
+                categorySelect.value = 'Food';
+                unitSelect.value = 'Cans';
+            } else if (itemSelect.value === 'Coffee or Energy Drinks') {
+                quantityInput.value = '1500';
+                categorySelect.value = 'Food';
+                unitSelect.value = 'Sachets';
+            } else if (itemSelect.value === 'Toothpaste') {
+                quantityInput.value = '600';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Shampoo') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Bottles';
+            } else if (itemSelect.value === 'Bath Bar Soap') {
+                quantityInput.value = '1200';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Sanitary Napkin') {
+                quantityInput.value = '1200';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Packs';
+            } else if (itemSelect.value === 'Comb') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Disposable Shaving Razor') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Nail Cutter') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Hygiene';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Laundry Bar Soap') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Bathroom Dipper') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === '20L Square Plastic Bucket with Deep Cover and Plastic Handle') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Blanket') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Mosquito Net') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Mat') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Pieces';
+            } else if (itemSelect.value === 'Kitchen Utensils') {
+                quantityInput.value = '300';
+                categorySelect.value = 'Equipment';
+                unitSelect.value = 'Sets';
             }
 
             updateExpirationDateFields();
         }
 
         function updateExpirationDateFields() {
-            const requiresExpirationDate = categorySelect.value !== 'Equipment'
-                && categorySelect.value !== 'Hygiene';
+            const requiresExpirationDate = expirationRequiredItems.has(itemSelect.value);
             expirationDateGroup.classList.toggle('hidden', !requiresExpirationDate);
             expirationDateInput.disabled = !requiresExpirationDate;
             expirationDateInput.required = requiresExpirationDate;

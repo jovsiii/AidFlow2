@@ -35,16 +35,27 @@ it('stores inventory items from the phone form in firebase', function () {
     expect($response->getSession()->get('success'))->toBe('Item added successfully');
 });
 
-it('hides the expiration date for equipment and hygiene', function () {
+it('preserves expiration dates for the requested food and hygiene items', function () {
     $html = view('phoneFeatures.addInventory', [
         'batches' => collect(),
         'errors' => new MessageBag(),
     ])->render();
 
-    expect($html)->toContain('id="expirationDateGroup"')
-        ->and($html)->toContain("categorySelect.value !== 'Equipment'")
-        ->and($html)->toContain("categorySelect.value !== 'Hygiene'")
-        ->and($html)->toContain('expirationDateInput.disabled = !requiresExpirationDate');
+    $expiryItems = [
+        'Canned Sardines',
+        'Canned Tuna',
+        'Canned Beef Loaf',
+        'Coffee or Energy Drinks',
+        'Toothpaste',
+        'Shampoo',
+        'Bath Bar Soap',
+        'Sanitary Napkin',
+    ];
+
+    foreach ($expiryItems as $item) {
+        expect($html)->toContain("itemSelect.value === '{$item}'")
+            ->and($html)->toContain('expirationRequiredItems.has(itemSelect.value)');
+    }
 });
 
 it('applies toothbrush defaults when the item is selected', function () {
@@ -84,6 +95,47 @@ it('applies canned sardines defaults while retaining the expiration date input',
         ->and($html)->toContain("categorySelect.value = 'Food'")
         ->and($html)->toContain("unitSelect.value = 'Cans'")
         ->and($html)->toContain('id="expiration_date"');
+});
+
+it('applies all requested item defaults and expiration-date rules', function () {
+    $html = view('phoneFeatures.addInventory', [
+        'batches' => collect(),
+        'errors' => new MessageBag(),
+    ])->render();
+
+    $defaults = [
+        'Canned Tuna' => [1500, 'Food', 'Cans'],
+        'Canned Beef Loaf' => [1500, 'Food', 'Cans'],
+        'Coffee or Energy Drinks' => [1500, 'Food', 'Sachets'],
+        'Toothpaste' => [600, 'Hygiene', 'Pieces'],
+        'Shampoo' => [300, 'Hygiene', 'Bottles'],
+        'Bath Bar Soap' => [1200, 'Hygiene', 'Pieces'],
+        'Sanitary Napkin' => [1200, 'Hygiene', 'Packs'],
+        'Comb' => [300, 'Hygiene', 'Pieces'],
+        'Disposable Shaving Razor' => [300, 'Hygiene', 'Pieces'],
+        'Nail Cutter' => [300, 'Hygiene', 'Pieces'],
+        'Laundry Bar Soap' => [300, 'Equipment', 'Pieces'],
+        'Bathroom Dipper' => [300, 'Equipment', 'Pieces'],
+        '20L Square Plastic Bucket with Deep Cover and Plastic Handle' => [300, 'Equipment', 'Pieces'],
+        'Blanket' => [300, 'Equipment', 'Pieces'],
+        'Mosquito Net' => [300, 'Equipment', 'Pieces'],
+        'Mat' => [300, 'Equipment', 'Pieces'],
+        'Kitchen Utensils' => [300, 'Equipment', 'Sets'],
+    ];
+
+    foreach ($defaults as $item => [$quantity, $category, $unit]) {
+        expect($html)->toContain("itemSelect.value === '{$item}'")
+            ->and($html)->toContain("quantityInput.value = '{$quantity}'")
+            ->and($html)->toContain("categorySelect.value = '{$category}'")
+            ->and($html)->toContain("unitSelect.value = '{$unit}'");
+    }
+
+    expect($html)->toContain("itemSelect.value === 'Comb'")
+        ->and($html)->toContain("itemSelect.value === 'Disposable Shaving Razor'")
+        ->and($html)->toContain("itemSelect.value === 'Nail Cutter'")
+        ->and($html)->toContain("itemSelect.value === 'Laundry Bar Soap'")
+        ->and($html)->toContain("itemSelect.value === 'Kitchen Utensils'")
+        ->and($html)->toContain('expirationRequiredItems.has(itemSelect.value)');
 });
 
 it('allows equipment items without an expiration date', function () {
