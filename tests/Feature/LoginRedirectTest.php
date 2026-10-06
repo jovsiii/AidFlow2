@@ -18,7 +18,7 @@ it('redirects an admin to the dashboard after login', function () {
     $this->post(route('login.post'), [
         'username' => 'admin',
         'password' => 'secret',
-    ])->assertRedirect(route('dashboard'));
+    ])->assertRedirect('/features/dashboard');
 });
 
 it('redirects a user to phone features after login', function () {
@@ -42,8 +42,8 @@ it('redirects a user to phone features after login', function () {
 it('redirects an already logged in account according to its role', function (string $role, string $route) {
     $this->withSession([
         'user' => ['role' => $role],
-    ])->get(route('login'))->assertRedirect(route($route));
+    ])->get(route('login'))->assertRedirect($route);
 })->with([
-    'admin' => ['admin', 'dashboard'],
-    'user' => ['user', 'phoneFeatures'],
+    'admin' => ['admin', '/features/dashboard'],
+    'user' => ['user', '/phoneFeatures'],
 ]);
