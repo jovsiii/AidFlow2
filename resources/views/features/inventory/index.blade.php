@@ -90,9 +90,9 @@
     </form>
 
     <div class="flex flex-row gap-4">
-        <div class="flex-1 flex flex-col bg-white rounded-lg border-2 border-red-600 p-4 min-h-[calc(82vh-120px)]">
+        <div class="flex-1 flex flex-col bg-white rounded-lg border-2 border-red-600 p-4 h-[calc(82vh-120px)] overflow-hidden">
             <h3 class="text-red-700 text-xl font-semibold mb-2">Inventory List</h3>
-            <div class="overflow-auto h-full max-h-full border border-pink-100 rounded-md p-2">
+            <div class="overflow-y-auto h-full border border-pink-100 rounded-md p-2">
                 <table class="w-full text-sm divide-y divide-gray-100">
                     <thead class="text-red-800 font-semibold">
                         <tr>
