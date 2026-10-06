@@ -159,15 +159,21 @@
                             fill="#7a0b0b">{{ number_format($totalItems ?? 0) }}</text>
                     </svg>
                     <div class="space-y-2">
-                        <div class="flex items-center gap-2"><span
-                                class="w-3 h-3 bg-green-500 inline-block rounded-sm"></span> Good <strong
-                                class="ml-2">{{ number_format($goodItems ?? 0) }}</strong></div>
-                        <div class="flex items-center gap-2"><span
-                                class="w-3 h-3 bg-yellow-400 inline-block rounded-sm"></span> Near Expiry <strong
-                                class="ml-2">{{ number_format($nearExpiryItems ?? 0) }}</strong></div>
-                        <div class="flex items-center gap-2"><span
-                                class="w-3 h-3 bg-red-500 inline-block rounded-sm"></span> Expired <strong
-                                class="ml-2">{{ number_format($expiredItems ?? 0) }}</strong></div>
+                        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+                            <div class="flex items-center gap-2"><span
+                                    class="w-3 h-3 bg-green-500 inline-block rounded-sm"></span> Good</div>
+                            <strong class="text-right">{{ number_format($goodItems ?? 0) }}</strong>
+                        </div>
+                        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+                            <div class="flex items-center gap-2"><span
+                                    class="w-3 h-3 bg-yellow-400 inline-block rounded-sm"></span> Near Expiry</div>
+                            <strong class="text-right">{{ number_format($nearExpiryItems ?? 0) }}</strong>
+                        </div>
+                        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+                            <div class="flex items-center gap-2"><span
+                                    class="w-3 h-3 bg-red-500 inline-block rounded-sm"></span> Expired</div>
+                            <strong class="text-right">{{ number_format($expiredItems ?? 0) }}</strong>
+                        </div>
                     </div>
                 </div>
             </div>

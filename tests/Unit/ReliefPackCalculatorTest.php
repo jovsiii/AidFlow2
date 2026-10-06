@@ -2,6 +2,11 @@
 
 use App\Services\ReliefPackCalculator;
 
+function reliefPackConfiguration(): array
+{
+    return require dirname(__DIR__, 2).'/config/relief_packs.php';
+}
+
 function completeReliefPackItems(): array
 {
     return [
@@ -29,24 +34,47 @@ function completeReliefPackItems(): array
 }
 
 it('counts one pack for one complete standard item group', function () {
-    expect((new ReliefPackCalculator())->count(completeReliefPackItems()))->toBe(1);
+    $configuration = reliefPackConfiguration();
+    $calculator = new ReliefPackCalculator($configuration['required_items'], $configuration['threshold']);
+
+    expect($calculator->count(completeReliefPackItems()))->toBe(1);
+});
+
+it('counts complete packs using the configured pack contents', function () {
+    $calculator = new ReliefPackCalculator([
+        'Rice' => 6,
+        'Canned Tuna' => 5,
+    ]);
+
+    $items = [
+        ['name' => 'Rice', 'stock' => 12],
+        ['name' => 'Canned Tuna', 'stock' => 10],
+    ];
+
+    expect($calculator->count($items))->toBe(2);
 });
 
 it('caps the standard relief-pack count at 300', function () {
+    $configuration = reliefPackConfiguration();
+    $calculator = new ReliefPackCalculator($configuration['required_items'], $configuration['threshold']);
     $items = collect(range(1, 301))->map(fn () => [
         'type' => 'standard',
     ])->all();
 
-    expect((new ReliefPackCalculator())->count($items))->toBe(300);
+    expect($calculator->count($items))->toBe(300);
 });
 
-it('exposes the standard relief-pack threshold', function () {
-    expect((new ReliefPackCalculator())->threshold())->toBe(300);
+it('exposes the configured standard relief-pack threshold', function () {
+    $configuration = reliefPackConfiguration();
+
+    expect((new ReliefPackCalculator($configuration['required_items'], 250))->threshold())->toBe(250);
 });
 
 it('does not count an incomplete item group as a pack', function () {
+    $configuration = reliefPackConfiguration();
+    $calculator = new ReliefPackCalculator($configuration['required_items'], $configuration['threshold']);
     $items = completeReliefPackItems();
     array_pop($items);
 
-    expect((new ReliefPackCalculator())->count($items))->toBe(0);
+    expect($calculator->count($items))->toBe(0);
 });
