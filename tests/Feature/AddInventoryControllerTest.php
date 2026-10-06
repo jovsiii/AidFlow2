@@ -73,6 +73,19 @@ it('applies rice defaults while retaining the expiration date input', function (
         ->and($html)->toContain('updateItemDefaults();');
 });
 
+it('applies canned sardines defaults while retaining the expiration date input', function () {
+    $html = view('phoneFeatures.addInventory', [
+        'batches' => collect(),
+        'errors' => new MessageBag(),
+    ])->render();
+
+    expect($html)->toContain("itemSelect.value === 'Canned Sardines'")
+        ->and($html)->toContain("quantityInput.value = '1500'")
+        ->and($html)->toContain("categorySelect.value = 'Food'")
+        ->and($html)->toContain("unitSelect.value = 'Cans'")
+        ->and($html)->toContain('id="expiration_date"');
+});
+
 it('allows equipment items without an expiration date', function () {
     $firebase = Mockery::mock(FirebaseService::class);
     $firebase->shouldReceive('createInventory')->once()->with([

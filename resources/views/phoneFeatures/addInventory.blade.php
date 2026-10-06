@@ -208,6 +208,10 @@
                 quantityInput.value = '1800';
                 categorySelect.value = 'Food';
                 unitSelect.value = 'Kg';
+            } else if (itemSelect.value === 'Canned Sardines') {
+                quantityInput.value = '1500';
+                categorySelect.value = 'Food';
+                unitSelect.value = 'Cans';
             }
 
             updateExpirationDateFields();
